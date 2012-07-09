@@ -495,8 +495,10 @@ public class RestFixture extends ActionFixture {
     }
 
     public void setHeaders(String headers) {
+        LOG.debug("setHeaders: " + headers+" GLOBALS: "+GLOBALS);
         String header = GLOBALS.substitute(headers);
         requestHeaders = parseHeaders(header);
+        LOG.debug("setHeaders - finished: " + requestHeaders);
     }
 
     public void HEAD() {
@@ -776,7 +778,7 @@ public class RestFixture extends ActionFixture {
     // Split method so RestScriptFixture can feed in the url
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void doMethod(String body, String method) {
-        LOG.debug("row.getCell(1): "+row.getCell(1).text());
+        LOG.debug("row.getCell(1): " + row.getCell(1).text());
         CellWrapper urlCell = row.getCell(1);
         String url = stripTag(urlCell.text());
         String resUrl = GLOBALS.substitute(url);
@@ -947,6 +949,8 @@ public class RestFixture extends ActionFixture {
     }
 
     private Map<String, String> parseHeaders(String str) {
+        if (str.contains("&lt;br/&gt;"))
+            return Tools.convertStringToMap(str, ":", "&lt;br/&gt;");
         return Tools.convertStringToMap(str, ":", LINE_SEPARATOR);
     }
 
